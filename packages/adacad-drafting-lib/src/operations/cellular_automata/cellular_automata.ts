@@ -51,6 +51,18 @@ const timestep:NumParam = {
 //     dx: "the rule that determines how the next generation is calculated at each timestep."
 // }
 
+const wrapping:SelectParam = {
+    name: 'ruleset',
+    type: 'select',
+    selectlist: [
+        { name: 'wrapped', value: 0 },
+        { name: 'fixed live', value: 1 }, 
+        { name: 'fixed dead', value: 2 }
+    ],
+    value: 0,
+    dx: "determines what value is used for cells that are outside the draft, the edge-cases, when calculating an iteration."
+}
+
 const custom_ruleset:StringParam =
 {
   name: 'custom',
@@ -107,7 +119,11 @@ const nextGeneration = (current_state: Drawdown, born: Uint8Array, survive: Uint
     // const width = warps(current_state);
     // const height = wefts(current_state);
 
-    
+    /**
+     * 1. Iterate through grid of cells left to right, top to bottom
+     * 2. 
+     */
+
     
     // return next_state;
 }
