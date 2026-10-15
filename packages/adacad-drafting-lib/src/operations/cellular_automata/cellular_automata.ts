@@ -197,6 +197,28 @@ const applyRule = (cell_value: number, nbrhood_sum: number, born:Uint8Array, sur
     }
     return live;
 }
+
+/**
+ * Calculates the next state of the drawdown for a single iteration of the automata.
+ * @param current_state the current state of the drawdown
+ * @param born a lookup table (array of 0 and 1 values) determining the neighborhood sum required for a cell to be born
+ * @param survive a lookup table (array of 0 and 1 values) determining the neighborhood sum required for a cell to survive
+ * @returns a drawdown representing the next state after the rule has been applied to the entire grid
+ */
+const nextGeneration = (current_state: Drawdown, born: Uint8Array, survive: Uint8Array, mode: wrap_mode): Drawdown => {
+    const next_state: Drawdown = [];
+    const width = warps(current_state);
+    const height = wefts(current_state);
+
+    for (var i=0; i<height; i++) {
+        next_state[i] = [];
+        for (var j=0; j<width; j++) {
+            const nbrhood_sum = sumNbrhood(current_state, i, j, mode)
+            next_state[i][j] = createCell(applyRule(Number(current_state[i][j].is_up), nbrhood_sum, born, survive) === 1);
+        }
+    }
+    
+    return next_state;
 }
 
 const perform = (param_vals: Array<OpParamVal>, op_inputs: Array<OpInput>) => {
