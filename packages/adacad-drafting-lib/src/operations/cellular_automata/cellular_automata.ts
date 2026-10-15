@@ -1,6 +1,6 @@
 //TODO: check and resolve unecessary dependencies at the end - for now, just import the ones listed in the sample operation documentation
-import { initDraftFromDrawdown, initDraftWithParams, wefts, warps, createCell, updateWeftSystemsAndShuttles, updateWarpSystemsAndShuttles, Drawdown } from "../../draft";
-import { getOpParamValById, getInputDraft, getAllDraftsAtInlet, parseDraftNames } from "../../operations";
+import { initDraftFromDrawdown, initDraftWithParams, wefts, warps, createCell, updateWeftSystemsAndShuttles, updateWarpSystemsAndShuttles, Drawdown, getCellValue } from "../../draft";
+import { getOpParamValById, getInputDraft, getAllDraftsAtInlet, parseDraftNames, flattenParamVals} from "../../operations";
 import { transformationOp } from "../categories";
 import { OperationParam, OperationInlet, OpParamVal, OpInput, Operation, OpMeta, NumParam, SelectParam, StringParam } from "../types";
 import { Sequence } from "../../sequence";
@@ -141,14 +141,11 @@ const perform = (param_vals: Array<OpParamVal>, op_inputs: Array<OpInput>) => {
 }
 
 const generateName = (param_vals: Array<OpParamVal>, op_inputs: Array<OpInput>) : string => {
-    // const num_up: number = <number>getOpParamValById(0, param_vals);
-    // return num_up + '/all-up';
+    return 'cellular_automata(' + flattenParamVals(param_vals) + ")";
 }
 
 const sizeCheck = (param_vals: Array<OpParamVal>): boolean => {
-//   const ends: number = <number>getOpParamValById(0, param_vals);
-//   const pics: number = <number>getOpParamValById(1, param_vals);
-//   return (ends * pics <= defaults.max_area) ? true : false;
+    return true;
 }
 
 export const cellular_automata: Operation = { name, meta, params, inlets, perform, generateName, sizeCheck };
