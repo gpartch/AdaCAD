@@ -79,7 +79,7 @@ const custom_ruleset:StringParam =
   dx: 'define a custom ruleset' //TODO: come up with better description later
 };
 
-const params: Array<OperationParam> = [timestep, custom_ruleset];
+const params: Array<OperationParam> = [timestep, wrapping, custom_ruleset];
 
 // DEFINE INLETS
 const draft_inlet: OperationInlet = {
