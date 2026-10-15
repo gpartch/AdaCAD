@@ -8,6 +8,12 @@ import { Sequence } from "../../sequence";
 
 const name = "cellular_automata";
 
+enum wrap_mode {
+    wrap,
+    live,
+    dead
+};
+
 const meta: OpMeta = {
   displayname: 'cellular automata', 
   advanced: true, 
@@ -109,15 +115,39 @@ const parseRule = (rulestring: string): { born: Uint8Array; survive: Uint8Array 
     return {born, survive};
 }
 
-const sumNbrhood = (nbrhood: Drawdown, idx: number[]): number => {
-    //for()
-}
+/**
+ * Handles drawdown edge-condition checking and resolution for retrieving cell values. 
+ * @param current_state the current state of the drawdown
+ * @param i_idx the primary index of the cell at the center of the neighborhood
+ * @param j_idx the secondary index of the cell at the center of the neighborhood
+ * @param mode the wrapping mode for edge-case cells
+ * @returns the value of a cell after wrapping rules have been applied
+ */
+const wrapGetCellValue = (current_state: Drawdown, i_idx: number, j_idx: number, mode: wrap_mode): 0 | 1 => {
+    // TODO: consider whether or not to retrieve these once inside nextGeneration and pass them down instead of retrieving once for every cell
+    const height = wefts(current_state);
+    const width = warps(current_state);
+    const isOutside = i_idx < 0 || i_idx >= height || j_idx < 0 || j_idx >= width;
 
-// Applies the rule for a single iteration of the automata
-const nextGeneration = (current_state: Drawdown, born: Uint8Array, survive: Uint8Array): Drawdown => {
-    // const next_state: Drawdown = [];
-    // const width = warps(current_state);
-    // const height = wefts(current_state);
+    if (isOutside) {
+        switch (mode) {
+        case wrap_mode.live:
+            // All 'cells' outside the draft are live
+            return 1; 
+        case wrap_mode.dead:
+            // All 'cells' outside the draft are dead
+            return 0;
+        case wrap_mode.wrap:
+            // All 'cells' outside the draft wrap back around to the other side
+            if (height === 0 || width === 0) return 0;
+            i_idx = (i_idx + height) % height;
+            j_idx = (j_idx + width) % width;
+            break;
+        }
+    }
+
+    return getCellValue(current_state[i_idx][j_idx]) === true ? 1 : 0;
+};
 
     /**
      * 1. Iterate through grid of cells left to right, top to bottom
