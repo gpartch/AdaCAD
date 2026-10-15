@@ -149,13 +149,36 @@ const wrapGetCellValue = (current_state: Drawdown, i_idx: number, j_idx: number,
     return getCellValue(current_state[i_idx][j_idx]) === true ? 1 : 0;
 };
 
-    /**
-     * 1. Iterate through grid of cells left to right, top to bottom
-     * 2. 
-     */
+/**
+ * The neighborhood of a cell (here we are using the common Moore-style neighborhood) is the grid 
+ * with the cell identified by idx (marked by an X) at the center. This function sums up 
+ * the values (0s or 1s) of all the surrounding cells in the neighborhood.
+ * 
+ * | 0 | 1 | 0 |
+ * -------------
+ * | 1 | X | 1 |
+ * -------------
+ * | 1 | 0 | 0 |
+ * -------------
+ * 
+ * @param current_state the current state of the drawdown
+ * @param i_idx the primary index of the cell at the center of the neighborhood
+ * @param j_idx the secondary index of the cell at the center of the neighborhood
+ * @param wrap the wrapping mode for edge-case cells
+ * @returns the number of live cells in the surrounding Moore neighborhood of a particular cell
+ */
+const sumNbrhood = (current_state: Drawdown, i_idx: number, j_idx: number, mode: wrap_mode): number => {
+  let sum = 0;
 
-    
-    // return next_state;
+  for (let di = -1; di <= 1; di++) {
+    for (let dj = -1; dj <= 1; dj++) {
+      if (di === 0 && dj === 0) continue;
+      sum += wrapGetCellValue(current_state, i_idx + di, j_idx + dj, mode);
+    }
+  }
+
+  return sum;
+};
 }
 
 const perform = (param_vals: Array<OpParamVal>, op_inputs: Array<OpInput>) => {
