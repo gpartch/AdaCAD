@@ -224,13 +224,21 @@ const nextGeneration = (current_state: Drawdown, born: Uint8Array, survive: Uint
 const perform = (param_vals: Array<OpParamVal>, op_inputs: Array<OpInput>) => {
     // The timestep/ number of iterations that have elapsed
     const tstep: number = <number>getOpParamValById(0, param_vals); 
+    // Wrapping mode
+    const mode: wrap_mode = <number>getOpParamValById(1, param_vals);
     // The rule that is being applied at each timestep
-    const rule: string = <string>getOpParamValById(0, param_vals);
+    const rule: string = <string>getOpParamValById(2, param_vals);
+
     const draft = getInputDraft(op_inputs);
     // Lookup tables for born/survive values based on the ruleset
     const {born, survive} = parseRule(rule);
+    
+    let next_state: Drawdown = draft != null ? draft.drawdown : [];
+    for (let i=0; i<tstep; i++) {
+        next_state = nextGeneration(next_state, born, survive, mode)
+    }
 
-    // Calculate the 
+    return Promise.resolve([{draft: initDraftFromDrawdown(next_state)}]);
 }
 
 const generateName = (param_vals: Array<OpParamVal>, op_inputs: Array<OpInput>) : string => {
