@@ -7,6 +7,7 @@ export * from "./atop/atop";
 export * from "./_bindweftfloats/bindweftfloats";
 export * from "./_bindwarpfloats/bindwarpfloats";
 export * from "./bwimagemap/bwimagemap";
+export * from "./cellular_automata/cellular_automata";
 export * from "./chaos/chaos";
 export * from "./clear/clear";
 export * from "./combos/combos";
