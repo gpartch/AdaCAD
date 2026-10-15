@@ -179,6 +179,24 @@ const sumNbrhood = (current_state: Drawdown, i_idx: number, j_idx: number, mode:
 
   return sum;
 };
+
+/**
+ * Calculates the state of a particular cell after the cellular automata rule has been applied
+ * @param cell_value the current live/dead stateof the cell
+ * @param nbrhood_sum the sum of the surrounding Moore neighborhood
+ * @param born a lookup table (array of 0 and 1 values) determining the neighborhood sum required for a cell to be born
+ * @param survive a lookup table (array of 0 and 1 values) determining the neighborhood sum required for a cell to survive
+ * @returns the live/dead state, 1 or 0, of the cell the rule is being applied to
+ */
+const applyRule = (cell_value: number, nbrhood_sum: number, born:Uint8Array, survive:Uint8Array): number => {
+    let live: number = 0;
+    if(cell_value == 0) {
+        live = born[nbrhood_sum] == 1 ? 1 : 0;
+    } else if (cell_value == 1) {
+        live = survive[nbrhood_sum] == 1 ? 1 : 0;
+    }
+    return live;
+}
 }
 
 const perform = (param_vals: Array<OpParamVal>, op_inputs: Array<OpInput>) => {
